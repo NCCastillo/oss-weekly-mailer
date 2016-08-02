@@ -1,4 +1,5 @@
 require 'httparty'
+
 class Webhooks::RepoController < ApplicationController
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
 
@@ -11,10 +12,11 @@ class Webhooks::RepoController < ApplicationController
 
     # Because params[:action] is special to rails...
     if request.request_parameters['action'] == "closed" && params[:pull_request][:title].include?('Weekly email:')
-      # TODO change the repo over to `thefrontside/oss-wumbo`
       markdown_url = Octokit.pull_request_files('robdel12/test', params[:number])[0][:raw_url]
       markdown_body = HTTParty.get(markdown_url).response.body
-      OSSMailer.OSS_email(markdown_body).deliver
+      sender = ENV[params[:pull_request][:user][:login]]
+      date = params[:pull_request][:merged_at]
+      OSSMailer.OSS_email(markdown_body, sender, date).deliver
     end
   end
 
