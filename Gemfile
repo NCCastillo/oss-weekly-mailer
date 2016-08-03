@@ -19,6 +19,8 @@ gem "octokit", "~> 4.0"
 gem 'httparty', '~> 0.13.7'
 gem 'redcarpet', '~> 3.3', '>= 3.3.4'
 
+gem "turbolinks"
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
